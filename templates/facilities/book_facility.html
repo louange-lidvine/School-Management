@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+
+{% block title %}Facilities{% endblock %}
+{% comment %} <link rel="stylesheet" href="{% static 'css/styles.css' %}"> <!-- Optional CSS for styling --> {% endcomment %}
+
+<body>
+
+    <h1>{{ facility.name }}</h1>
+    <p><strong>Description:</strong> {{ facility.description }}</p>
+    <p><strong>Capacity:</strong> {{ facility.capacity }}</p>
+
+    <hr>
+
+    <h2>Book this Facility</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ booking_form.non_field_errors }}
+
+        <div>
+            <label for="start_time">Start Time:</label>
+            {{ booking_form.start_time }}
+            {{ booking_form.start_time.errors }}
+        </div>
+
+        <div>
+            <label for="end_time">End Time:</label>
+            {{ booking_form.end_time }}
+            {{ booking_form.end_time.errors }}
+        </div>
+
+        <button type="submit">confirm</button>
+    </form>
+
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <p>{{ message }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+</body>
+</html>

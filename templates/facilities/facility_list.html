@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}Facilities{% endblock %}
+
+{% block content %}
+<h1>Our Facilities</h1>
+<div class="facility-grid">
+    {% for facility in facilities %}
+    <div class="card facility-card">
+        <h2>{{ facility.name }}</h2>
+        <p>{{ facility.description|truncatewords:20 }}</p>
+        <p><strong>Capacity:</strong> {{ facility.capacity }}</p>
+       <a href="{% url 'facility_booking' facility.id %}" class="btn btn-primary">Book Now</a>
+        <a href="{% url 'update_facility' facility.id %}" class="btn btn-warning">Update</a>
+    <a href="{% url 'delete_facility' facility.id %}" class="btn btn-danger">Delete</a>
+
+    </div>
+    {% empty %}
+    <p>No facilities available.</p>
+    {% endfor %}
+</div>
+{% endblock %}

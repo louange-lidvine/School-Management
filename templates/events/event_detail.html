@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ event.name }} - Event Details{% endblock %}
+
+{% block content %}
+<div class="event-detail">
+    <h1>{{ event.name }}</h1>
+    <div class="event-info">
+        <p><strong>Date:</strong> {{ event.date }}</p>
+        <p><strong>Participants:</strong> {{ event.participants.count }} / {{ event.max_participants }}</p>
+    </div>
+    <div class="event-description">
+        <h2>Description</h2>
+        <p>{{ event.description }}</p>
+    </div>
+    {% if user.is_authenticated %}
+        {% if user.member in event.participants.all %}
+            <p class="registered-message">You are registered for this event.</p>
+        {% elif event.participants.count < event.max_participants %}
+            <form method="post" action="{% url 'event_register' event.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary">Register for Event</button>
+            </form>
+        {% endif %}
+    {% else %}
+        <p>Please <a href="{% url 'login' %}">log in</a> to register for this event.</p>
+    {% endif %}
+</div>
+{% endblock %}

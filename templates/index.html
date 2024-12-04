@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<h1>Welcome, {{ user.username }}!</h1>
+<div class="dashboard-grid">
+    <div class="card">
+        <h2>Your Upcoming Events</h2>
+        <canvas id="eventChart"></canvas>
+    </div>
+    <div class="card">
+        <h2>Membership Statistics</h2>
+        <canvas id="membershipChart"></canvas>
+    </div>
+    <div class="card">
+        <h2>Facility Bookings</h2>
+        <canvas id="facilityChart"></canvas>
+    </div>
+</div>
+
+<script>
+// Get data from Django context
+const eventData = {{ event_data|safe }};
+const membershipData = {{ membership_data|safe }};
+const facilityData = {{ facility_data|safe }};
+
+// Render Event Chart
+const eventChart = new Chart(document.getElementById('eventChart'), {
+    type: 'line',
+    data: {
+        labels: eventData.map(event => `Month ${event.date__month}`),
+        datasets: [{
+            label: 'Upcoming Events',
+            data: eventData.map(event => event.count),
+            borderColor: 'rgba(75, 192, 192, 1)',
+            fill: false,
+        }]
+    }
+});
+
+// Render Membership Chart
+const membershipChart = new Chart(document.getElementById('membershipChart'), {
+    type: 'pie',
+    data: {
+        labels: membershipData.map(m => m.membership_type),
+        datasets: [{
+            label: 'Membership Distribution',
+            data: membershipData.map(m => m.count),
+            backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+        }]
+    }
+});
+
+// Render Facility Booking Chart
+const facilityChart = new Chart(document.getElementById('facilityChart'), {
+    type: 'bar',
+    data: {
+        labels: facilityData.map(facility => facility.name),
+        datasets: [{
+            label: 'Bookings per Facility',
+            data: facilityData.map(facility => facility.booking_count),
+            backgroundColor: 'rgba(153, 102, 255, 0.2)',
+            borderColor: 'rgba(153, 102, 255, 1)',
+            borderWidth: 1
+        }]
+    }
+});
+</script>
+{% endblock %}
